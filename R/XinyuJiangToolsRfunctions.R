@@ -162,3 +162,142 @@ func7 <- function(x, func, interval){
   return(oout$maximum)
 } 
 
+#' Quiz 2 - 1
+#' 
+#'calculates $x^T A^{-1} x$ 
+#'
+#' @param a matrix
+#' @param x vector
+#'
+#' @return object
+#' @export
+
+func8 <- function(a, x){
+  stopifnot(is.numeric(x))
+  stopifnot(is.numeric(a))
+  stopifnot(is.matrix(a))
+  stopifnot(nrow(a) == length(x))
+
+  s <- solve(a,x)
+  sum(x * s)
+}
+
+
+#' Quiz 2 - 2
+#' 
+#'calculates $x^T A^{-1} x$ but it is a binary operator rather than an apparent function call,
+#'
+#' @param a matrix
+#' @param x vector
+#'
+#' @return object
+#' @export
+
+"%func9%" <- function(a, x){
+  stopifnot(is.numeric(x))
+  stopifnot(is.numeric(a))
+  stopifnot(is.matrix(a))
+  stopifnot(nrow(a) == length(x))
+  
+  s <- solve(a,x)
+  sum(x * s)
+}
+
+
+#' Quiz 2 - 3
+#' 
+#'a function that takes a numeric matrix and standardizes its columns
+#'
+#' @param a matrix
+#'
+#' @return matrix
+#' @export
+
+func10 <- function(a){
+  stopifnot(is.matrix(a))
+  stopifnot(!is.na(a))
+  stopifnot(!is.nan(a))
+  stopifnot(is.finite(a))
+  stopifnot(is.numeric(a))
+  
+  for(i in 1:ncol(a)){
+    b <- a[,i]
+    a[,i] <- (b - mean(b)) / sd(b)
+  }
+  return (a)
+}
+
+
+#' HW 2 - 1
+#' 
+#'a function that takes a numeric matrix and standardizes its columns. but do it without loops.
+#'
+#' @param a matrix
+#'
+#' @return object
+#' @export
+
+func11 <- function(a){
+  stopifnot(is.matrix(a))
+  stopifnot(!is.na(a))
+  stopifnot(!is.nan(a))
+  stopifnot(is.finite(a))
+  stopifnot(is.numeric(a))
+  
+  x <- function(a) {
+    (a - mean(a)) / sd(a)
+  }
+  
+  apply(a, 2, x)
+}
+
+
+
+#' HW 2 - 2
+#' 
+#'a function just like the function array in the R base package,
+#'
+#' @param X matrix
+#' @param MARGIN margin of object to work
+#' @param FUN function 
+#' @param ... probability
+#' 
+#' @return array
+#' @export
+
+func12 <- function(X, MARGIN, FUN, ...)
+{
+  
+  stopifnot(length(dim(X))==2)
+  
+  if(length(dim(X))!=2)
+  {
+    stop("matrix is not 2d")
+  } 
+  if(!(MARGIN %in% c(1,2)))
+  {
+    stop("margin is not in 1 or 2")
+  }
+  R = dim(X)[1]
+  C = dim(X)[2]
+  f = match.fun(FUN)
+  
+  if (MARGIN == 1)
+  {
+    result = list()
+    for(i in 1:R)
+    {
+      result[[i]] = f(X[i,],...)
+    }
+  }else if(MARGIN == 2)
+  {
+    result = list()
+    for(j in 1:C)
+    {
+      result[[j]] = f(X[,j],...)
+    }
+  }
+  return(simplify2array(result))
+}
+
+
